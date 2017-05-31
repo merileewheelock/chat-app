@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="/styles.css">
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="config.js"></script>
 
 </head>
 <body>
@@ -58,16 +59,13 @@
 		var name = prompt("What is your name?");
 		// console.log(io); // io is connected to the window and globally available
 		// io was imported from the socket.io script tag. This is different from var io in the index.js page
-		var socketio = io.connect('http://127.0.0.1:8080'); // 127.0.0.1 is the same as localhost
+		var socketio = io.connect(socketUrl); // 127.0.0.1 is the same as localhost
 		// Send an event to the server
 		socketio.emit('nameToServer',name);
 
-		namesArray = [];
 		socketio.on('newUser',(userName)=>{
 			$('#messages').prepend(`<p>${userName} has joined the chat</p>`);
 			// This will list all users
-			namesArray.push(userName);
-			// console.log(namesArray);
 			var usersDiv = document.getElementById('users');
 			users.innerHTML += `<div class="col-sm-12">${userName}</div>`;
 		});

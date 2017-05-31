@@ -30,6 +30,19 @@ var server = http.createServer((req, res)=>{
 				res.end(data);
 			}
 		});
+	}else if(req.url == '/config.js'){
+		fs.readFile('config.js', 'utf-8', (error,data)=>{
+			if(error){
+				res.writeHead(500, {'content-type':'text/html'});
+				res.end('Internal Server Error');
+			}else{
+				res.writeHead(200,{'content-type':'text/html'});
+				res.end(data);
+			}
+		});
+	}else{
+		res.writeHead(404,{'content-type':'text/html'});
+		res.end('<h1>This page does not exist</h1>');
 	}
 });
 
@@ -40,19 +53,25 @@ var server = http.createServer((req, res)=>{
 // .emit = you want to send a message
 
 var io = socketio.listen(server);
-
+var users = [];
 // Handle socket connections..
 io.sockets.on('connect',(socket)=>{
 	console.log("Someone connected via socket!");
 	// console.log(socket);
+	// io.sockets.emit('sendUserArray', users);
 
 	socket.on('nameToServer',(name)=>{
 		console.log(name + " just joined.");
 		io.sockets.emit('newUser',name);
-		// namesArray = [];
-		// namesArray.push(name);
-		// console.log(namesArray);
 	});
+	// socket.on('nameToServer',(name)=>{
+	// 	var clientInfo = new Object();
+	// 	clientInfo.name = name;
+	// 	clientInfo.clientId = socket.id;
+	// 	users.push(clientInfo);
+	// 	console.log(clientInfo.name + " just joined.");
+	// 	io.sockets.emit('newUser',users);
+	// });
 	socket.on('sendMessage', ()=>{
 		console.log("Someone clicked send");
 	});
@@ -62,9 +81,21 @@ io.sockets.on('connect',(socket)=>{
 		var currentTime = date.toLocaleTimeString();
 		io.sockets.emit('messageToClient', `${messageObj.name} (${currentTime}): ` + messageObj.newMessage);
 	});
+
+	socket.on('disconnect', (data)=>{
+		console.log("Someone disconnected");
+		for (let i = 0; i < users.length; i++){
+			var currentUser = users[i];
+			if (currentUser.clientId == socket.id){
+				users.pop(currentUser);
+				break;
+			}
+		}
+		// io.sockets.emit('userDisconnect', users);
+	})
 });
 
 // console.log("The node file is working.");
 
 server.listen(8080);
-console.log("Listening on port 8080!");
+console.log("Listening on port 8080");
