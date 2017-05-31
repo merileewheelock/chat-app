@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chat App - node and sockets</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Questrial|Russo+One" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/styles.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+	<div class="container">
+
+		<div class="chat-container col-sm-10 col-sm-offset-1">
+
+			<div class="row text-center">
+				<h1>Chat Room</h1>
+			</div>
+
+			<div class="row">
+
+				<div id="messages" class="col-sm-7 col-sm-offset-1">
+					<!-- Messages go here -->
+				</div>
+
+				<div class="col-sm-3" id="users">
+					<h4>Connected Users</h4>
+					<!-- Users will go in here -->
+				</div>
+
+				
+				<div class="col-sm-12">
+					<form id="submit-message">
+						<input type="text" id="new-message" class="col-sm-6 col-sm-offset-1" />
+						<button type="submit" id="send-message" class="btn btn-warning">
+							<!-- Click to send message to server -->
+							Send!
+						</button>
+					</form>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+
+	<script type="text/javascript">
+	// This will print in the browser console, NOT in terminal node
+		// console.log("Browser JavaScript");
+		var name = prompt("What is your name?");
+		// console.log(io); // io is connected to the window and globally available
+		// io was imported from the socket.io script tag. This is different from var io in the index.js page
+		var socketio = io.connect('http://127.0.0.1:8080'); // 127.0.0.1 is the same as localhost
+		// Send an event to the server
+		socketio.emit('nameToServer',name);
+
+		namesArray = [];
+		socketio.on('newUser',(userName)=>{
+			$('#messages').prepend(`<p>${userName} has joined the chat</p>`);
+			// This will list all users
+			namesArray.push(userName);
+			// console.log(namesArray);
+			var usersDiv = document.getElementById('users');
+			users.innerHTML += `<div class="col-sm-12">${userName}</div>`;
+		});
+
+		// $('#send-message').click(function(){
+		// 	socketio.emit('sendMessage');
+		// });
+
+		$('#submit-message').submit(function(event){
+			event.preventDefault();
+			var newMessage = $('#new-message').val();
+			socketio.emit('messageToServer',{
+				newMessage: newMessage,
+				name: name
+			});
+			$('#new-message').val('');
+		});
+
+		// This will print the message to the box
+		socketio.on('messageToClient',(message)=>{
+			$('#messages').prepend(`<p class="message">${message}</p>`);
+			// prepend puts the text at the beginning
+		});
+
+	</script>
+
+</body>
+</html>

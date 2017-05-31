@@ -12,5 +12,8 @@
     "socketio"
   ],
   "author": "Merilee Wheelock",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.0.1"
+  }
 }

@@ -1,0 +1,47 @@
+*{
+	/* font-family: 'Questrial', sans-serif; */
+}
+
+body{
+	background: url('http://blog.jostle.me/hs-fs/hub/1842135/file-3900278471-jpg/blog-files/chats.jpg?t=1495820823977&width=1480&name=chats.jpg');
+}
+
+.chat-container{
+	border: 2px solid black;
+	margin-top: 20px;
+	padding-bottom: 10px;
+	background-color: white;
+}
+
+.message{
+	font-weight: bold;
+}
+
+h1{
+	font-family: 'Russo One', sans-serif;
+}
+
+#messages{
+	height: 50vh;
+	border: 2px solid black;
+	overflow: scroll;
+	padding: 10px;
+}
+
+#users{
+	height: 50vh;
+	border: 2px solid black;
+	border-left: 0px;
+	overflow: scroll;
+}
+
+#new-message{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	height: 50px;
+}
+
+#send-message{
+	margin-top: 20px;
+	margin-left: 20px;
+}
