@@ -63,12 +63,21 @@
 		// Send an event to the server
 		socketio.emit('nameToServer',name);
 
-		socketio.on('newUser',(userName)=>{
-			$('#messages').prepend(`<p>${userName} has joined the chat</p>`);
+		socketio.on('newUser',function(userName){
+			var userJustJoined = userName[userName.length - 1];
+			// $('#messages').prepend(`<p>${userJustJoined} has joined the chat</p>`);
 			// This will list all users
 			var usersDiv = document.getElementById('users');
-			users.innerHTML += `<div class="col-sm-12">${userName}</div>`;
+			users.innerHTML = '';
+			for (let i = 0; i < userName.length; i++) {
+				users.innerHTML += `<div class="col-sm-12">${userName[i]}</div>`;
+			}
 		});
+
+		// socketio.on('leftUser',function(userName){
+		// 	var userJustLeft = userName[leftUser];
+		// 	$('#messages').prepend(`<p>${userJustLeft} has left the chat</p>`);
+		// });
 
 		// $('#send-message').click(function(){
 		// 	socketio.emit('sendMessage');
